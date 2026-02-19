@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Job Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-light">
+
+<nav class="navbar navbar-dark bg-dark">
+    <div class="container-fluid">
+        <span class="navbar-brand">Job Portal Dashboard</span>
+        <div>
+            <a href="{{ url_for('logout') }}" class="btn btn-danger btn-sm">Logout</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-4">
+
+    <!-- ✅ FLASH MESSAGE SECTION -->
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-success alert-dismissible fade show" role="alert">
+              {{ message }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <h2 class="mb-3">Available Jobs</h2>
+
+    {% if jobs %}
+        <div class="row">
+            {% for job in jobs %}
+                <div class="col-md-6 mb-3">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ job.title }}</h5>
+
+                            {% if job.company %}
+                                <h6 class="card-subtitle mb-2 text-muted">{{ job.company }}</h6>
+                            {% endif %}
+
+                            <p class="card-text">
+                                {% if job.location %}
+                                    <strong>Location:</strong> {{ job.location }} <br>
+                                {% endif %}
+                                {{ job.description }}
+                            </p>
+
+                            <!-- ✅ FIXED APPLY BUTTON (IMPORTANT) -->
+                            <a href="{{ url_for('apply', job_id=job._id|string) }}" 
+                               class="btn btn-primary btn-sm">
+                               Apply
+                            </a>
+
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-warning">
+            No jobs available right now.
+        </div>
+    {% endif %}
+
+    <hr>
+
+    {% if current_user.role in ['admin', 'employer'] %}
+    <h3 class="mt-4">Post a New Job</h3>
+
+    <form method="POST" action="{{ url_for('post_job') }}">
+        <div class="mb-3">
+            <label class="form-label">Job Title</label>
+            <input type="text" name="title" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Company</label>
+            <input type="text" name="company" class="form-control">
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Location</label>
+            <input type="text" name="location" class="form-control">
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Job Description</label>
+            <textarea name="description" class="form-control" rows="3" required></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Post Job</button>
+    </form>
+    {% endif %}
+<h4 class="mt-5">My Applications</h4>
+
+{% for app in my_applications %}
+<div class="card mt-2 p-3">
+
+    <strong>{{ app.job_title }}</strong><br>
+
+    Status:
+    {% if app.status == "Interview Scheduled" %}
+        <span class="badge bg-info">
+            Interview on {{ app.interview_date }}
+        </span>
+    {% elif app.status == "Selected" %}
+        <span class="badge bg-success">
+            Selected
+        </span>
+    {% elif app.status == "Rejected" %}
+        <span class="badge bg-danger">
+            Rejected
+        </span>
+    {% else %}
+        <span class="badge bg-secondary">
+            Applied
+        </span>
+    {% endif %}
+
+</div>
+{% endfor %}
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

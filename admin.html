@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-light">
+
+<div class="container mt-4">
+
+    <h2 class="mb-4">Admin Dashboard</h2>
+
+    <!-- USERS SECTION -->
+    <h4>Users</h4>
+    <table class="table table-bordered">
+        <tr>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Role</th>
+        </tr>
+        {% for user in users %}
+        <tr>
+            <td>{{ user.id }}</td>
+            <td>{{ user.username }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.role }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <!-- JOBS SECTION -->
+    <h4>Jobs (Approval Required)</h4>
+    <table class="table table-bordered">
+        <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Company</th>
+            <th>Location</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+
+        {% for job in jobs %}
+        <tr>
+            <td>{{ job.id }}</td>
+            <td>{{ job.title }}</td>
+            <td>{{ job.company }}</td>
+            <td>{{ job.location }}</td>
+            <td>
+                {% if job.status == 'Pending' %}
+                    <span class="badge bg-warning">Pending</span>
+                {% else %}
+                    <span class="badge bg-success">Approved</span>
+                {% endif %}
+            </td>
+            <td>
+                {% if job.status == 'Pending' %}
+                    <a href="{{ url_for('approve_job', job_id=job.id) }}" 
+                       class="btn btn-success btn-sm">
+                        Approve
+                    </a>
+                {% else %}
+                    Approved
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <!-- APPLICATIONS SECTION -->
+    <h4>Applications</h4>
+    <table class="table table-bordered">
+        <tr>
+            <th>ID</th>
+            <th>Job ID</th>
+            <th>User ID</th>
+            <th>Resume</th>
+        </tr>
+        {% for app in applications %}
+        <tr>
+            <td>{{ app.id }}</td>
+            <td>{{ app.job_id }}</td>
+            <td>{{ app.user_id }}</td>
+            <td>{{ app.resume_filename }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+</div>
+
+</body>
+</html>

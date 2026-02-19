@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Uploaded Resume</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<div class="container mt-5">
+    <div class="card p-4 shadow">
+        <h3 class="mb-3">Uploaded Resume</h3>
+
+        <p><strong>File name:</strong> {{ filename }}</p>
+
+        <a href="/uploads/{{ filename }}" class="btn btn-success" target="_blank">
+            Open Resume
+        </a>
+
+        <br><br>
+        <a href="{{ url_for('dashboard') }}">Back to Dashboard</a>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,2 +1,2 @@
 # job_portal
-this is job portal website :)
+this is a job portal website where you can apply and post your job :)
